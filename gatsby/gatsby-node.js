@@ -1,4 +1,5 @@
 const path = require(`path`)
+const graphql = require
 const { createFilePath } = require(`gatsby-source-filesystem`)
 
 exports.createPages = async ({ graphql, actions, reporter }) => {
@@ -58,6 +59,55 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
       })
     })
   }
+  const strapiResult = await graphql(
+    `
+      query {
+        allStrapiArticle {
+          nodes {
+            id
+            Slug
+            Subject
+            Content
+            createdAt
+          }
+        }
+      }
+    `  
+  )
+
+  if (strapiResult.errors) {
+    reporter.panicOnBuild(
+      `There was an error loading your strapi blog posts`,
+      strapiResult.errors
+    )
+    return
+  }
+
+  const strapiPosts = strapiResult.data.allStrapiArticle.nodes
+
+  // Create blog posts pages
+  // But only if there's at least one markdown file found at "content/blog" (defined in gatsby-config.js)
+  // `context` is available in the template as a prop and as a variable in GraphQL
+  const blogPostStrapi = path.resolve(`./src/templates/blog-post-strapi.js`)
+
+  if (strapiPosts.length > 0) {
+    strapiPosts.forEach((post, index) => {
+      const previous = index === post.length - 1 ? null : post[index + 1]
+      const next = index === 0 ? null : post[index - 1]
+      console.log(post.Subject);
+      createPage({
+        path: post.Slug,
+        component: blogPostStrapi,
+        context: {
+          slug: post.Slug,
+          previous,
+          next,
+        },
+      })
+    })
+  }
+
+
 }
 
 exports.onCreateNode = ({ node, actions, getNode }) => {
