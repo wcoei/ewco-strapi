@@ -10,14 +10,19 @@
   },
   "attributes": {
     "Subject": {
-      "type": "string"
+      "type": "string",
+      "required": true,
+      "unique": true
     },
     "Content": {
       "type": "richtext"
     },
-    "category": {
+    "Category": {
       "model": "category",
       "via": "article"
+    },
+    "Slug": {
+      "type": "string"
     }
   }
 }
