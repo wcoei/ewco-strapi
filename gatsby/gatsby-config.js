@@ -27,6 +27,17 @@ module.exports = {
       },
     },
     {
+      resolve: "gatsby-source-strapi",
+      options: {
+        apiURL: "http://localhost:1337",
+        contentTypes: [
+          "Article",
+          "Category"
+        ],
+        queryLimit: 1000,
+      },
+    },
+    {
       resolve: `gatsby-transformer-remark`,
       options: {
         plugins: [
