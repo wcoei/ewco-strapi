@@ -1,5 +1,6 @@
 import React from "react"
 import { Link, graphql } from "gatsby"
+import ReactMarkdown from "react-markdown"
 
 import Bio from "../components/bio"
 import Layout from "../components/layout"
@@ -23,12 +24,11 @@ const BlogPostTemplate = ({ data, pageContext, location }) => {
       >
         <header>
           <h1 itemProp="headline">{post.Subject}</h1>
-          <p>{post.createdAt}</p>
+          <p>{Date(post.createdAt)}</p>
         </header>
-        <section
-          dangerouslySetInnerHTML={{ __html: post.Content }}
-          itemProp="articleBody"
-        />
+        <section itemProp="articleBody">
+          <ReactMarkdown escapeHtml={false} source={post.Content} />
+        </section>
         <hr />
         <footer>
           <Bio />
